@@ -17,7 +17,7 @@ function figmaAssetResolver() {
 }
 
 export default defineConfig({
-  base: '/SSA/',
+  base: '/',
 
   plugins: [
     figmaAssetResolver(),
