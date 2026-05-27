@@ -314,7 +314,24 @@ const handleTouchEnd = () => {
 
             {/* Right: Product card visual */}
             <div className="flex items-center justify-center">
-              <div className="relative">
+              <div
+  className="relative touch-pan-x"
+  onTouchStart={(e) => {
+    window.startX = e.touches[0].clientX;
+  }}
+  onTouchEnd={(e) => {
+    const endX = e.changedTouches[0].clientX;
+    const diff = window.startX - endX;
+
+    if (Math.abs(diff) > 50) {
+      if (diff > 0) {
+        nextHero(); // swipe left → next
+      } else {
+        prevHero(); // swipe right → previous
+      }
+    }
+  }}
+>
                 <div
                   className="w-72 h-80 rounded-3xl flex flex-col items-center justify-center relative overflow-hidden transition-all duration-700"
                   style={{
