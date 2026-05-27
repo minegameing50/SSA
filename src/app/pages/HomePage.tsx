@@ -35,7 +35,7 @@ tagline: "Knock down every larva, every time",
 gradient: "linear-gradient(135deg,#7c2d12,#b45309)",
 accent: "#fde68a",
 icon: Bug,
-image: "/SSA/images/products/img113.jpg"
+image: "/images/products/img113.jpg"
 },
 
 {
@@ -45,7 +45,7 @@ tagline: "Trigger rapid, broad-spectrum pest knockdown",
 gradient: "linear-gradient(135deg,#1a3a2a,#2d6a4f)",
 accent: "#4ade80",
 icon: Zap,
-image: "/SSA/images/products/img201.jpg"
+image: "/images/products/img201.jpg"
 },
 
 {
@@ -55,7 +55,7 @@ tagline: "Premium diamide for lasting caterpillar control",
 gradient: "linear-gradient(135deg,#78350f,#92400e)",
 accent: "#fed7aa",
 icon: Shield,
-image: "/SSA/images/products/img51.jpg"
+image: "/images/products/img51.jpg"
 },
 
 {
@@ -65,7 +65,7 @@ tagline: "Bio power against all larval pests",
 gradient: "linear-gradient(135deg,#14532d,#166534)",
 accent: "#86efac",
 icon: Sprout,
-image: "/SSA/images/products/img27.jpg"
+image: "/images/products/img27.jpg"
 },
 
 {
@@ -75,7 +75,7 @@ tagline: "Nature's golden bio stimulant for all crops",
 gradient: "linear-gradient(135deg,#78350f,#b45309)",
 accent: "#fde68a",
 icon: Sprout,
-image: "/SSA/images/products/img309.jpg"
+image: "/images/products/img309.jpg"
 },
 
 {
@@ -85,7 +85,7 @@ tagline: "Advanced control for sucking pests",
 gradient: "linear-gradient(135deg,#14532d,#15803d)",
 accent: "#86efac",
 icon: Bug,
-image: "/SSA/images/products/img199.jpg"
+image: "/images/products/img199.jpg"
 },
 
 {
@@ -95,7 +95,7 @@ tagline: "High purity potassium humate growth booster",
 gradient: "linear-gradient(135deg,#0c4a6e,#0369a1)",
 accent: "#bae6fd",
 icon: Sprout,
-image: "/SSA/images/products/img265.jpg"
+image: "/images/products/img265.jpg"
 },
 
 {
@@ -105,7 +105,7 @@ tagline: "Silicone spreader for maximum spray efficacy",
 gradient: "linear-gradient(135deg,#0c4a6e,#0369a1)",
 accent: "#bae6fd",
 icon: Droplets,
-image: "/SSA/images/products/img330.jpg"
+image: "/images/products/img330.jpg"
 }
 ];
 
