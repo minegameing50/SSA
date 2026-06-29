@@ -21,6 +21,13 @@ import {
 import { Logo } from "../components/Logo";
 import { ProductCard } from "../components/ProductCard";
 import { products } from "../data/products";
+import { useInView } from "../hooks/useInView";
+import { motion, AnimatePresence } from "framer-motion";
+
+const swipeConfidenceThreshold = 10000;
+const swipePower = (offset: number, velocity: number) => {
+  return Math.abs(offset) * velocity;
+};
 
 const PHONE_HREF = "tel:+918319703894";
 const WHATSAPP_HREF = "https://wa.me/918319703894";
@@ -29,6 +36,7 @@ const featuredProducts = products.filter((p) => p.featured);
  
 const productShowcase = [
 {
+id: "fighter",
 name: "Fighter",
 category: "Insecticide",
 tagline: "Knock down every larva, every time",
@@ -39,6 +47,7 @@ image: "/images/products/img113.jpg"
 },
 
 {
+id: "trigger",
 name: "Trigger",
 category: "Insecticide",
 tagline: "Trigger rapid, broad-spectrum pest knockdown",
@@ -49,6 +58,7 @@ image: "/images/products/img201.jpg"
 },
 
 {
+id: "contra",
 name: "Contra",
 category: "Insecticide",
 tagline: "Premium diamide for lasting caterpillar control",
@@ -59,6 +69,7 @@ image: "/images/products/img51.jpg"
 },
 
 {
+id: "black-mamba",
 name: "Black Mamba",
 category: "Bio Insecticide",
 tagline: "Bio power against all larval pests",
@@ -69,6 +80,7 @@ image: "/images/products/img27.jpg"
 },
 
 {
+id: "gold",
 name: "Gold",
 category: "Plant Growth",
 tagline: "Nature's golden bio stimulant for all crops",
@@ -79,6 +91,7 @@ image: "/images/products/img309.jpg"
 },
 
 {
+id: "robin",
 name: "Robin",
 category: "Insecticide",
 tagline: "Advanced control for sucking pests",
@@ -89,6 +102,7 @@ image: "/images/products/img199.jpg"
 },
 
 {
+id: "fit-plus",
 name: "Fit+",
 category: "Plant Growth",
 tagline: "High purity potassium humate growth booster",
@@ -99,6 +113,7 @@ image: "/images/products/img265.jpg"
 },
 
 {
+id: "silk",
 name: "Silk",
 category: "Wetting Agent",
 tagline: "Silicone spreader for maximum spray efficacy",
@@ -152,43 +167,24 @@ const benefits = [
 
 export function HomePage() {
   const [heroSlide, setHeroSlide] = useState(0);
-  const heroTimer = useRef<ReturnType<typeof setInterval> | null>(null);
+  const [slideDir, setSlideDir] = useState(0);
+  const [slideKey, setSlideKey] = useState(0);
 
-const [touchStart, setTouchStart] = useState(0);
-const [touchEnd, setTouchEnd] = useState(0);
+  const featuredRef = useInView<HTMLDivElement>(".anim-fade-up");
+  const categoriesRef = useInView<HTMLDivElement>(".anim-fade-up");
+  const benefitsRef = useInView<HTMLDivElement>(".anim-fade-up");
+  const brandRef = useInView<HTMLDivElement>(".anim-fade-up");
+  const ctaRef = useInView<HTMLDivElement>(".anim-fade-up");
 
-const handleTouchStart = (e:any) => {
-  setTouchStart(e.targetTouches[0].clientX);
-};
-
-const handleTouchMove = (e:any) => {
-  setTouchEnd(e.targetTouches[0].clientX);
-};
-
-const handleTouchEnd = () => {
-  if (touchStart - touchEnd > 50) {
-    nextHero();
-  }
-
-  if (touchStart - touchEnd < -50) {
-    prevHero();
-  }
-};
-
-  useEffect(() => {
-    heroTimer.current = setInterval(() => {
-      setHeroSlide((p) => (p + 1) % productShowcase.length);
-    }, 3500);
-    return () => { if (heroTimer.current) clearInterval(heroTimer.current); };
-  }, []);
-
-  const prevHero = () => {
-    if (heroTimer.current) clearInterval(heroTimer.current);
-    setHeroSlide((p) => (p === 0 ? productShowcase.length - 1 : p - 1));
-  };
-  const nextHero = () => {
-    if (heroTimer.current) clearInterval(heroTimer.current);
+  const nextSlide = () => {
+    setSlideDir(1);
     setHeroSlide((p) => (p + 1) % productShowcase.length);
+    setSlideKey((k) => k + 1);
+  };
+  const prevSlide = () => {
+    setSlideDir(-1);
+    setHeroSlide((p) => (p === 0 ? productShowcase.length - 1 : p - 1));
+    setSlideKey((k) => k + 1);
   };
 
   const current = productShowcase[heroSlide];
@@ -198,12 +194,9 @@ const handleTouchEnd = () => {
     <div>
       {/* ── HERO ── */}
       <section
-  className="relative min-h-screen flex items-center overflow-hidden transition-all duration-700"
-  style={{ background: current.gradient }}
-  onTouchStart={handleTouchStart}
-  onTouchMove={handleTouchMove}
-  onTouchEnd={handleTouchEnd}
->
+        className="relative min-h-screen flex items-center overflow-hidden"
+        style={{ background: current.gradient }}
+      >
         {/* Decorative */}
         <div className="absolute inset-0 overflow-hidden pointer-events-none">
           <div
@@ -276,7 +269,7 @@ const handleTouchEnd = () => {
 
               <div className="flex flex-wrap gap-3 mb-10">
                 <Link
-                  to={`/products/${products.find((p) => p.name === current.name)?.id ?? ""}`}
+                  to={`/products/${current.id}`}
                   className="inline-flex items-center gap-2 px-6 py-3 rounded-xl font-semibold text-sm transition-all hover:-translate-y-0.5 hover:shadow-xl"
                   style={{ background: current.accent, color: "#1a1a1a" }}
                 >
@@ -314,24 +307,7 @@ const handleTouchEnd = () => {
 
             {/* Right: Product card visual */}
             <div className="flex items-center justify-center">
-              <div
-  className="relative touch-pan-x"
-  onTouchStart={(e) => {
-    window.startX = e.touches[0].clientX;
-  }}
-  onTouchEnd={(e) => {
-    const endX = e.changedTouches[0].clientX;
-    const diff = window.startX - endX;
-
-    if (Math.abs(diff) > 50) {
-      if (diff > 0) {
-        nextHero(); // swipe left → next
-      } else {
-        prevHero(); // swipe right → previous
-      }
-    }
-  }}
->
+              <div className="relative">
                 <div
                   className="w-72 h-80 rounded-3xl flex flex-col items-center justify-center relative overflow-hidden transition-all duration-700"
                   style={{
@@ -401,7 +377,7 @@ const handleTouchEnd = () => {
           {/* Slider controls */}
           <div className="flex items-center justify-center gap-4 mt-12">
             <button
-              onClick={prevHero}
+              onClick={prevSlide}
               className="w-9 h-9 rounded-xl flex items-center justify-center transition-all hover:scale-105"
               style={{
                 background: "rgba(255,255,255,0.12)",
@@ -416,8 +392,9 @@ const handleTouchEnd = () => {
                 <button
                   key={i}
                   onClick={() => {
-                    if (heroTimer.current) clearInterval(heroTimer.current);
+                    setSlideDir(i > heroSlide ? 1 : -1);
                     setHeroSlide(i);
+                    setSlideKey((k) => k + 1);
                   }}
                   className="h-1.5 rounded-full transition-all duration-300"
                   style={{
@@ -430,7 +407,7 @@ const handleTouchEnd = () => {
             </div>
 
             <button
-              onClick={nextHero}
+              onClick={nextSlide}
               className="w-9 h-9 rounded-xl flex items-center justify-center transition-all hover:scale-105"
               style={{
                 background: "rgba(255,255,255,0.12)",
@@ -470,34 +447,31 @@ const handleTouchEnd = () => {
       </section>
 
       {/* ── FEATURED PRODUCTS ── */}
-      <section className="py-20" style={{ background: "#f8fffe" }}>
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="flex flex-col sm:flex-row items-start sm:items-end justify-between gap-4 mb-10">
+      <section className="py-20 bg-[#f8fffe]">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8" ref={featuredRef}>
+          <div className="flex flex-col sm:flex-row items-start sm:items-end justify-between gap-4 mb-10 anim-fade-up">
             <div>
               <span
-                className="text-sm font-semibold uppercase tracking-wider"
-                style={{ color: "#f4a31a" }}
+                className="text-sm font-semibold uppercase tracking-wider text-[#f4a31a]"
               >
                 Our Products
               </span>
               <h2
-                className="mt-1"
+                className="mt-1 text-[#1b4332]"
                 style={{
                   fontSize: "clamp(1.75rem,3vw,2.25rem)",
                   fontWeight: 700,
-                  color: "#1b4332",
                 }}
               >
                 Featured Products
               </h2>
-              <p className="mt-2 text-sm" style={{ color: "#6b7280" }}>
+              <p className="mt-2 text-sm text-[#6b7280]">
                 Top picks from our agricultural product range
               </p>
             </div>
             <Link
               to="/products"
-              className="inline-flex items-center gap-1.5 text-sm font-semibold hover:gap-2.5 transition-all"
-              style={{ color: "#2d6a4f" }}
+              className="inline-flex items-center gap-1.5 text-sm font-semibold hover:gap-2.5 transition-all text-[#2d6a4f]"
             >
               View All <ArrowRight className="w-4 h-4" />
             </Link>
@@ -513,30 +487,23 @@ const handleTouchEnd = () => {
 
       {/* ── CATEGORIES ── */}
       <section className="py-20 bg-white">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="text-center mb-12">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8" ref={categoriesRef}>
+          <div className="text-center mb-12 anim-fade-up">
             <span
-              className="text-sm font-semibold uppercase tracking-wider"
-              style={{ color: "#f4a31a" }}
+              className="text-sm font-semibold uppercase tracking-wider text-[#f4a31a]"
             >
-              Product Range
+              Shop By Needs
             </span>
             <h2
-              className="mt-1"
+              className="mt-2 text-[#1b4332]"
               style={{
-                fontSize: "clamp(1.75rem,3vw,2.25rem)",
-                fontWeight: 700,
-                color: "#1b4332",
+                fontSize: "clamp(2rem,4vw,2.75rem)",
+                fontWeight: 800,
+                letterSpacing: "-0.02em",
               }}
             >
-              Browse by Category
+              Our Product Categories
             </h2>
-            <p
-              className="mt-3 max-w-xl mx-auto text-sm"
-              style={{ color: "#6b7280" }}
-            >
-              Comprehensive solutions across every aspect of modern agriculture
-            </p>
           </div>
 
           <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-5">
@@ -546,14 +513,13 @@ const handleTouchEnd = () => {
                 <Link
                   key={cat.label}
                   to={`/products?category=${encodeURIComponent(cat.key)}`}
-                  className="group p-6 rounded-2xl transition-all duration-300 hover:-translate-y-1"
+                  className="group p-6 rounded-2xl transition-all duration-300 hover:-translate-y-1 bg-white border border-gray-100"
                   style={{
-                    background: cat.color,
                     boxShadow: "0 4px 16px rgba(0,0,0,0.04)",
                   }}
                   onMouseEnter={(e) =>
                     (e.currentTarget.style.boxShadow =
-                      "0 12px 32px rgba(45,106,79,0.15)")
+                      "0 12px 32px rgba(0,0,0,0.08)")
                   }
                   onMouseLeave={(e) =>
                     (e.currentTarget.style.boxShadow =
@@ -562,14 +528,14 @@ const handleTouchEnd = () => {
                 >
                   <div
                     className="w-12 h-12 rounded-xl flex items-center justify-center mb-4 transition-transform group-hover:scale-110"
-                    style={{ background: "rgba(255,255,255,0.7)" }}
+                    style={{ background: `${cat.iconColor}15` }}
                   >
                     <Icon className="w-6 h-6" style={{ color: cat.iconColor }} />
                   </div>
-                  <h3 className="font-semibold mb-1" style={{ color: "#1b4332" }}>
+                  <h3 className="font-semibold mb-1 text-[#1b4332]">
                     {cat.label}
                   </h3>
-                  <p className="text-xs" style={{ color: "#6b7280" }}>
+                  <p className="text-xs text-[#6b7280]">
                     {cat.description}
                   </p>
                   <div
@@ -707,33 +673,32 @@ const handleTouchEnd = () => {
       </section>
 
       {/* ── BENEFITS ── */}
-      <section className="py-20" style={{ background: "#f8fffe" }}>
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="text-center mb-12">
+      <section className="py-20 bg-[#f8fffe]">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8" ref={benefitsRef}>
+          <div className="text-center mb-12 anim-fade-up">
             <span
-              className="text-sm font-semibold uppercase tracking-wider"
-              style={{ color: "#f4a31a" }}
+              className="text-sm font-semibold uppercase tracking-wider text-[#f4a31a]"
             >
-              Our Promise
+              Why Choose Us
             </span>
             <h2
-              className="mt-1"
+              className="mt-2 text-[#1b4332]"
               style={{
-                fontSize: "clamp(1.75rem,3vw,2.25rem)",
-                fontWeight: 700,
-                color: "#1b4332",
+                fontSize: "clamp(2rem,4vw,2.75rem)",
+                fontWeight: 800,
+                letterSpacing: "-0.02em",
               }}
             >
-              Why Choose Shiv Shatakshi Agro
+              Growing Better Together
             </h2>
           </div>
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
-            {benefits.map((benefit) => {
+            {benefits.map((benefit, i) => {
               const Icon = benefit.icon;
               return (
                 <div
                   key={benefit.title}
-                  className="p-6 rounded-2xl bg-white text-center group transition-all duration-300 hover:-translate-y-1"
+                  className={`benefit-card-anim anim-fade-up anim-delay-${Math.min(i + 1, 4)} p-6 rounded-2xl bg-white text-center group transition-all duration-300 hover:-translate-y-1`}
                   style={{ boxShadow: "0 4px 20px rgba(0,0,0,0.05)" }}
                 >
                   <div

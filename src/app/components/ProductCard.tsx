@@ -103,8 +103,12 @@ export function ProductCard({ product }: ProductCardProps) {
           <>
             <img
               src={product.image}
-              alt={product.name}
+              alt={`${product.name} — ${product.category} by Shiv Shatakshi Agro`}
               className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105"
+              loading="lazy"
+              decoding="async"
+              width={400}
+              height={192}
             />
             <div
               className="absolute inset-0"

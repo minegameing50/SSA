@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { Phone, Mail, MapPin, MessageCircle, CheckCircle2, Leaf, Clock } from "lucide-react";
 import { Logo } from "../components/Logo";
+import { useInView } from "../hooks/useInView";
 
 const PHONE = "+91 83197 03894";
 const PHONE_HREF = "tel:+918319703894";
@@ -10,6 +11,10 @@ const EMAIL = "shivshatakshiagro@gmail.com";
 export function ContactPage() {
   const [form, setForm] = useState({ name: "", phone: "", email: "" });
   const [submitted, setSubmitted] = useState(false);
+
+  const cardsRef = useInView<HTMLDivElement>(".contact-card-anim");
+  const formRef = useInView<HTMLDivElement>(".form-anim");
+  const mapRef = useInView<HTMLDivElement>();
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setForm({ ...form, [e.target.name]: e.target.value });
@@ -27,7 +32,7 @@ export function ContactPage() {
         className="pt-24 pb-14"
         style={{ background: "linear-gradient(135deg, #0d2b1f, #1b4332, #2d6a4f)" }}
       >
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
+        <div className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center animate-fade-up">
           <div className="flex justify-center mb-4">
             <Logo size={52} showText={false} />
           </div>
@@ -49,11 +54,11 @@ export function ContactPage() {
 
       <div className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 py-14">
         {/* Quick contact action cards */}
-        <div className="grid grid-cols-1 sm:grid-cols-3 gap-5 mb-12">
+        <div className="grid grid-cols-1 sm:grid-cols-3 gap-5 mb-12" ref={cardsRef}>
           {/* Call */}
           <a
             href={PHONE_HREF}
-            className="group flex flex-col items-center text-center p-6 rounded-2xl bg-white transition-all duration-300 hover:-translate-y-1 hover:shadow-xl"
+            className="contact-card-anim anim-fade-up anim-delay-1 group flex flex-col items-center text-center p-6 rounded-2xl bg-white transition-all duration-300 hover:-translate-y-1 hover:shadow-xl"
             style={{ boxShadow: "0 4px 20px rgba(0,0,0,0.06)" }}
           >
             <div
@@ -79,7 +84,7 @@ export function ContactPage() {
             href={WHATSAPP_HREF}
             target="_blank"
             rel="noopener noreferrer"
-            className="group flex flex-col items-center text-center p-6 rounded-2xl bg-white transition-all duration-300 hover:-translate-y-1 hover:shadow-xl"
+            className="contact-card-anim anim-fade-up anim-delay-2 group flex flex-col items-center text-center p-6 rounded-2xl bg-white transition-all duration-300 hover:-translate-y-1 hover:shadow-xl"
             style={{ boxShadow: "0 4px 20px rgba(0,0,0,0.06)" }}
           >
             <div
@@ -103,7 +108,7 @@ export function ContactPage() {
           {/* Email */}
           <a
             href={`mailto:${EMAIL}`}
-            className="group flex flex-col items-center text-center p-6 rounded-2xl bg-white transition-all duration-300 hover:-translate-y-1 hover:shadow-xl"
+            className="contact-card-anim anim-fade-up anim-delay-3 group flex flex-col items-center text-center p-6 rounded-2xl bg-white transition-all duration-300 hover:-translate-y-1 hover:shadow-xl"
             style={{ boxShadow: "0 4px 20px rgba(0,0,0,0.06)" }}
           >
             <div
@@ -126,9 +131,9 @@ export function ContactPage() {
         </div>
 
         {/* Form + info grid */}
-        <div className="grid grid-cols-1 lg:grid-cols-5 gap-8">
+        <div className="grid grid-cols-1 lg:grid-cols-5 gap-8" ref={formRef}>
           {/* Contact Form */}
-          <div className="lg:col-span-3">
+          <div className="lg:col-span-3 form-anim anim-fade-left">
             <div
               className="rounded-3xl p-8"
               style={{ background: "white", boxShadow: "0 4px 24px rgba(0,0,0,0.06)" }}
@@ -263,7 +268,7 @@ export function ContactPage() {
           </div>
 
           {/* Side Info */}
-          <div className="lg:col-span-2 space-y-5">
+          <div className="lg:col-span-2 space-y-5 form-anim anim-fade-right">
             {/* Hours */}
             <div
               className="p-5 rounded-2xl"
@@ -332,7 +337,7 @@ export function ContactPage() {
         </div>
 
         {/* Map */}
-        <div id="map" className="mt-10 rounded-3xl overflow-hidden" style={{ height: "320px" }}>
+        <div id="map" className="mt-10 rounded-3xl overflow-hidden anim-fade-up" ref={mapRef} style={{ height: "320px" }}>
           <iframe
             src="https://www.google.com/maps/embed?pb=!1m12!1m8!1m3!1d58879.12506542005!2d75.8743286!3d22.7302738!3m2!1i1024!2i768!4f13.1!2m1!1sLg%2048%20a%20Orbit%20Mall%20AB%20Road%20Indore%20Tukoganj%20Indore%20Indore%20Madhya%20Pradesh%20India%20452001!5e0!3m2!1sen!2sin!4v1779691222760!5m2!1sen!2sin"
             width="100%"

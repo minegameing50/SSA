@@ -1,4 +1,8 @@
-import logoSrc from "../../imports/IMG-20260520-WA0000.jpg";
+// Logo image is served as a static public asset (/logo.jpg) for better performance:
+// - Not bundled into the JS bundle
+// - Can be preloaded via <link rel="preload"> in index.html
+// - Reduces initial JS bundle size
+const LOGO_SRC = "/logo.jpg";
 
 interface LogoProps {
   size?: number;
@@ -18,8 +22,10 @@ export function Logo({
   return (
     <div className={`flex items-center gap-2.5 ${className}`}>
       <img
-        src={logoSrc}
+        src={LOGO_SRC}
         alt="Shiv Shatakshi Agro Logo"
+        width={size}
+        height={size}
         style={{ width: size, height: size, objectFit: "contain" }}
         draggable={false}
       />

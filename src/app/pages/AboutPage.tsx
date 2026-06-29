@@ -1,18 +1,10 @@
 import { Link } from "react-router";
 import {
-  ArrowRight,
-  Target,
-  Eye,
-  Leaf,
-  Award,
-  Users,
-  Globe,
-  CheckCircle2,
-  TrendingUp,
-  Phone,
-  MessageCircle,
+  ArrowRight, Target, Eye, Leaf, Award, Users, Globe,
+  CheckCircle2, TrendingUp, Phone, MessageCircle,
 } from "lucide-react";
 import { Logo } from "../components/Logo";
+import { useInView } from "../hooks/useInView";
 
 const PHONE_HREF = "tel:+918319703894";
 const WHATSAPP_HREF = "https://wa.me/918319703894";
@@ -45,6 +37,10 @@ const values = [
 ];
 
 export function AboutPage() {
+  const whoRef = useInView<HTMLDivElement>();
+  const missionRef = useInView<HTMLDivElement>(".mission-card");
+  const valuesRef = useInView<HTMLDivElement>(".value-card");
+  const ctaRef = useInView<HTMLDivElement>();
   return (
     <div style={{ background: "#f8fffe" }}>
       {/* Hero */}
@@ -63,7 +59,7 @@ export function AboutPage() {
             backgroundSize: "28px 28px",
           }}
         />
-        <div className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-24 text-center">
+        <div className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-24 text-center animate-fade-up">
           <div className="flex justify-center mb-6">
             <Logo size={72} showText={false} />
           </div>
@@ -94,7 +90,7 @@ export function AboutPage() {
       {/* Who We Are */}
       <section className="py-20 bg-white">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="max-w-3xl mx-auto text-center">
+          <div className="max-w-3xl mx-auto text-center anim-fade-up" ref={whoRef}>
             <span
               className="text-sm font-semibold uppercase tracking-wider"
               style={{ color: "#f4a31a" }}
@@ -156,29 +152,19 @@ export function AboutPage() {
 
       {/* Mission & Vision */}
       <section className="py-20" style={{ background: "#f8fffe" }}>
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="text-center mb-12">
-            <span
-              className="text-sm font-semibold uppercase tracking-wider"
-              style={{ color: "#f4a31a" }}
-            >
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8" ref={missionRef}>
+          <div className="text-center mb-12 anim-fade-up mission-card">
+            <span className="text-sm font-semibold uppercase tracking-wider" style={{ color: "#f4a31a" }}>
               Our Direction
             </span>
-            <h2
-              className="mt-1"
-              style={{
-                fontSize: "clamp(1.75rem, 3vw, 2.25rem)",
-                fontWeight: 700,
-                color: "#1b4332",
-              }}
-            >
+            <h2 className="mt-1" style={{ fontSize: "clamp(1.75rem, 3vw, 2.25rem)", fontWeight: 700, color: "#1b4332" }}>
               Mission & Vision
             </h2>
           </div>
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
             {/* Mission */}
             <div
-              className="p-8 rounded-3xl relative overflow-hidden"
+              className="mission-card anim-fade-left p-8 rounded-3xl relative overflow-hidden"
               style={{ background: "linear-gradient(135deg, #1b4332, #2d6a4f)" }}
             >
               <Target className="w-10 h-10 text-white opacity-20 absolute top-4 right-4" />
@@ -213,7 +199,7 @@ export function AboutPage() {
 
             {/* Vision */}
             <div
-              className="p-8 rounded-3xl relative overflow-hidden"
+              className="mission-card anim-fade-right p-8 rounded-3xl relative overflow-hidden"
               style={{ background: "linear-gradient(135deg, #f4a31a, #d97706)" }}
             >
               <Eye className="w-10 h-10 text-white opacity-20 absolute top-4 right-4" />
@@ -251,36 +237,23 @@ export function AboutPage() {
 
       {/* Core Values */}
       <section className="py-20 bg-white">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="text-center mb-12">
-            <span
-              className="text-sm font-semibold uppercase tracking-wider"
-              style={{ color: "#f4a31a" }}
-            >
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8" ref={valuesRef}>
+          <div className="text-center mb-12 anim-fade-up value-card">
+            <span className="text-sm font-semibold uppercase tracking-wider" style={{ color: "#f4a31a" }}>
               What Drives Us
             </span>
-            <h2
-              className="mt-1"
-              style={{
-                fontSize: "clamp(1.75rem, 3vw, 2.25rem)",
-                fontWeight: 700,
-                color: "#1b4332",
-              }}
-            >
+            <h2 className="mt-1" style={{ fontSize: "clamp(1.75rem, 3vw, 2.25rem)", fontWeight: 700, color: "#1b4332" }}>
               Our Core Values
             </h2>
           </div>
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
-            {values.map((value) => {
+            {values.map((value, i) => {
               const Icon = value.icon;
               return (
                 <div
                   key={value.title}
-                  className="p-6 rounded-2xl text-center group transition-all duration-300 hover:-translate-y-1"
-                  style={{
-                    background: "#f8fffe",
-                    boxShadow: "0 4px 16px rgba(0,0,0,0.04)",
-                  }}
+                  className={`value-card anim-scale-in anim-delay-${Math.min(i + 1, 4)} p-6 rounded-2xl text-center group transition-all duration-300 hover:-translate-y-1`}
+                  style={{ background: "#f8fffe", boxShadow: "0 4px 16px rgba(0,0,0,0.04)" }}
                 >
                   <div
                     className="w-12 h-12 rounded-xl flex items-center justify-center mx-auto mb-4 transition-transform group-hover:scale-110"
@@ -305,11 +278,8 @@ export function AboutPage() {
       </section>
 
       {/* CTA */}
-      <section
-        className="py-16"
-        style={{ background: "linear-gradient(135deg, #1b4332, #2d6a4f)" }}
-      >
-        <div className="max-w-3xl mx-auto px-4 text-center">
+      <section className="py-16" style={{ background: "linear-gradient(135deg, #1b4332, #2d6a4f)" }}>
+        <div className="max-w-3xl mx-auto px-4 text-center anim-fade-up" ref={ctaRef}>
           <Globe className="w-12 h-12 text-white opacity-50 mx-auto mb-4" />
           <h2
             className="text-white mb-3"

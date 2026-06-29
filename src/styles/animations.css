@@ -1,0 +1,180 @@
+/* ─── Keyframes ─────────────────────────────────────────────────────────── */
+
+@keyframes fadeUp {
+  from { opacity: 0; transform: translateY(28px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to   { opacity: 1; }
+}
+
+@keyframes fadeLeft {
+  from { opacity: 0; transform: translateX(-32px); }
+  to   { opacity: 1; transform: translateX(0); }
+}
+
+@keyframes fadeRight {
+  from { opacity: 0; transform: translateX(32px); }
+  to   { opacity: 1; transform: translateX(0); }
+}
+
+@keyframes scaleIn {
+  from { opacity: 0; transform: scale(0.88); }
+  to   { opacity: 1; transform: scale(1); }
+}
+
+@keyframes float {
+  0%, 100% { transform: translateY(0px); }
+  50%       { transform: translateY(-12px); }
+}
+
+@keyframes pulse-glow {
+  0%, 100% { box-shadow: 0 0 0 0 rgba(45, 106, 79, 0.3); }
+  50%       { box-shadow: 0 0 0 12px rgba(45, 106, 79, 0); }
+}
+
+@keyframes shimmer {
+  0%   { background-position: -200% center; }
+  100% { background-position: 200% center; }
+}
+
+@keyframes slideDown {
+  from { opacity: 0; transform: translateY(-16px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+/* ─── Animation utility classes ─────────────────────────────────────────── */
+
+/* Used on elements that should animate when scrolled into view.
+   JS adds .is-visible to trigger the animation. */
+.anim-fade-up {
+  opacity: 0;
+  transform: translateY(28px);
+  transition: opacity 0.6s cubic-bezier(0.22, 1, 0.36, 1),
+              transform 0.6s cubic-bezier(0.22, 1, 0.36, 1);
+}
+.anim-fade-up.is-visible {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+.anim-fade-left {
+  opacity: 0;
+  transform: translateX(-32px);
+  transition: opacity 0.65s cubic-bezier(0.22, 1, 0.36, 1),
+              transform 0.65s cubic-bezier(0.22, 1, 0.36, 1);
+}
+.anim-fade-left.is-visible {
+  opacity: 1;
+  transform: translateX(0);
+}
+
+.anim-fade-right {
+  opacity: 0;
+  transform: translateX(32px);
+  transition: opacity 0.65s cubic-bezier(0.22, 1, 0.36, 1),
+              transform 0.65s cubic-bezier(0.22, 1, 0.36, 1);
+}
+.anim-fade-right.is-visible {
+  opacity: 1;
+  transform: translateX(0);
+}
+
+.anim-scale-in {
+  opacity: 0;
+  transform: scale(0.88);
+  transition: opacity 0.55s cubic-bezier(0.22, 1, 0.36, 1),
+              transform 0.55s cubic-bezier(0.22, 1, 0.36, 1);
+}
+.anim-scale-in.is-visible {
+  opacity: 1;
+  transform: scale(1);
+}
+
+/* Stagger delays for grid children */
+.anim-delay-1 { transition-delay: 0.05s; }
+.anim-delay-2 { transition-delay: 0.12s; }
+.anim-delay-3 { transition-delay: 0.19s; }
+.anim-delay-4 { transition-delay: 0.26s; }
+.anim-delay-5 { transition-delay: 0.33s; }
+.anim-delay-6 { transition-delay: 0.40s; }
+.anim-delay-7 { transition-delay: 0.47s; }
+
+/* ─── Instant keyframe animations (no JS needed) ─────────────────────────── */
+
+.animate-fade-up {
+  animation: fadeUp 0.65s cubic-bezier(0.22, 1, 0.36, 1) both;
+}
+.animate-fade-in {
+  animation: fadeIn 0.5s ease both;
+}
+.animate-fade-left {
+  animation: fadeLeft 0.65s cubic-bezier(0.22, 1, 0.36, 1) both;
+}
+.animate-fade-right {
+  animation: fadeRight 0.65s cubic-bezier(0.22, 1, 0.36, 1) both;
+}
+.animate-scale-in {
+  animation: scaleIn 0.55s cubic-bezier(0.22, 1, 0.36, 1) both;
+}
+.animate-slide-down {
+  animation: slideDown 0.5s cubic-bezier(0.22, 1, 0.36, 1) both;
+}
+.animate-float {
+  animation: float 4s ease-in-out infinite;
+}
+.animate-float-slow {
+  animation: float 6s ease-in-out infinite;
+}
+.animate-pulse-glow {
+  animation: pulse-glow 2.5s ease-in-out infinite;
+}
+
+/* Delay helpers for keyframe animations */
+.animate-delay-100 { animation-delay: 0.1s; }
+.animate-delay-200 { animation-delay: 0.2s; }
+.animate-delay-300 { animation-delay: 0.3s; }
+.animate-delay-400 { animation-delay: 0.4s; }
+.animate-delay-500 { animation-delay: 0.5s; }
+.animate-delay-600 { animation-delay: 0.6s; }
+.animate-delay-700 { animation-delay: 0.7s; }
+.animate-delay-800 { animation-delay: 0.8s; }
+
+/* Hero slide transition — content fades when slide changes */
+.hero-content-enter {
+  animation: fadeUp 0.5s cubic-bezier(0.22, 1, 0.36, 1) both;
+}
+.hero-card-enter {
+  animation: scaleIn 0.55s cubic-bezier(0.22, 1, 0.36, 1) both;
+}
+
+/* Respect reduced motion */
+@media (prefers-reduced-motion: reduce) {
+  .anim-fade-up,
+  .anim-fade-left,
+  .anim-fade-right,
+  .anim-scale-in {
+    opacity: 1;
+    transform: none;
+    transition: none;
+  }
+  .animate-float,
+  .animate-float-slow,
+  .animate-pulse-glow {
+    animation: none;
+  }
+  .hero-content-enter,
+  .hero-card-enter,
+  .animate-fade-up,
+  .animate-fade-in,
+  .animate-fade-left,
+  .animate-fade-right,
+  .animate-scale-in,
+  .animate-slide-down {
+    animation: none;
+    opacity: 1;
+    transform: none;
+  }
+}

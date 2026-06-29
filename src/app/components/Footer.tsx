@@ -1,5 +1,5 @@
 import { Link } from "react-router";
-import { Phone, Mail, MapPin, Facebook, Instagram, Youtube, Twitter, MessageCircle } from "lucide-react";
+import { Phone, Mail, Facebook, Instagram, Youtube, Twitter, MessageCircle } from "lucide-react";
 import { Logo } from "./Logo";
 
 const PHONE = "+91 83197 03894";
@@ -11,9 +11,9 @@ const productLinks = [
   { label: "Insecticides", path: "/products?category=Insecticide" },
   { label: "Herbicides", path: "/products?category=Herbicide" },
   { label: "Fungicides", path: "/products?category=Fungicide" },
-  { label: "Bio Stimulants", path: "/products?category=Bio+Stimulant" },
+  { label: "Bio Insecticides", path: "/products?category=Bio+Insecticide" },
   { label: "Micronutrients", path: "/products?category=Micronutrient" },
-  { label: "Organic Fertilizers", path: "/products?category=Organic+Fertilizer" },
+  { label: "Plant Growth", path: "/products?category=Plant+Growth" },
 ];
 
 const companyLinks = [

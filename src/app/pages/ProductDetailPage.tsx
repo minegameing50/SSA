@@ -1,19 +1,11 @@
 import { useParams, Link } from "react-router";
 import {
-  ArrowLeft,
-  Download,
-  MessageCircle,
-  Phone,
-  CheckCircle2,
-  Package,
-  FlaskConical,
-  Sprout,
-  Info,
-  Wheat,
-  ChevronRight,
+  ArrowLeft, Download, MessageCircle, Phone, CheckCircle2,
+  Package, FlaskConical, Sprout, Info, Wheat, ChevronRight,
 } from "lucide-react";
 import { products } from "../data/products";
 import { ProductCard } from "../components/ProductCard";
+import { useInView } from "../hooks/useInView";
 
 const categoryColors: Record<string, { bg: string; text: string }> = {
   Insecticide: { bg: "#fef3c7", text: "#92400e" },
@@ -58,6 +50,8 @@ export function ProductDetailPage() {
     .filter((p) => p.id !== product.id && p.category === product.category)
     .slice(0, 3);
 
+  const relatedRef = useInView<HTMLDivElement>(".related-card-anim");
+
   return (
     <div style={{ background: "#f8fffe", minHeight: "100vh" }}>
       {/* Breadcrumb */}
@@ -88,15 +82,17 @@ export function ProductDetailPage() {
         {/* Main Product Section */}
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-10 mb-14">
           {/* Product Image */}
-          <div>
+          <div className="animate-fade-left">
             <div
               className="rounded-3xl overflow-hidden aspect-square relative"
               style={{ background: "linear-gradient(135deg, #f0fdf4, #dcfce7)" }}
             >
               <img
                 src={product.image}
-                alt={product.name}
+                alt={`${product.name} — ${product.category} agricultural product by Shiv Shatakshi Agro`}
                 className="w-full h-full object-contain"
+                fetchPriority="high"
+                decoding="async"
               />
               <div
                 className="absolute inset-0"
@@ -127,7 +123,7 @@ export function ProductDetailPage() {
           </div>
 
           {/* Product Info */}
-          <div>
+          <div className="animate-fade-right">
             {/* Category & Name */}
             <span
               className="inline-flex px-3 py-1 rounded-full text-xs font-semibold mb-3"
@@ -215,7 +211,7 @@ export function ProductDetailPage() {
                 Inquire Now
               </Link>
               <a
-                href="https://wa.me/919876543210"
+                href="https://wa.me/918319703894"
                 target="_blank"
                 rel="noopener noreferrer"
                 className="flex-1 min-w-[140px] inline-flex items-center justify-center gap-2 px-5 py-3 rounded-xl font-semibold text-white transition-all hover:-translate-y-0.5"
@@ -238,8 +234,7 @@ export function ProductDetailPage() {
         {/* Details Tabs */}
         <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-14">
           {/* Benefits */}
-          <div
-            className="col-span-1 p-6 rounded-2xl"
+          <div className="col-span-1 p-6 rounded-2xl animate-fade-up animate-delay-100"
             style={{ background: "white", boxShadow: "0 4px 20px rgba(0,0,0,0.05)" }}
           >
             <div className="flex items-center gap-2 mb-4">
@@ -260,8 +255,7 @@ export function ProductDetailPage() {
           </div>
 
           {/* Usage */}
-          <div
-            className="col-span-1 p-6 rounded-2xl"
+          <div className="col-span-1 p-6 rounded-2xl animate-fade-up animate-delay-200"
             style={{ background: "white", boxShadow: "0 4px 20px rgba(0,0,0,0.05)" }}
           >
             <div className="flex items-center gap-2 mb-4">
@@ -285,8 +279,7 @@ export function ProductDetailPage() {
           </div>
 
           {/* Pack Info */}
-          <div
-            className="col-span-1 p-6 rounded-2xl"
+          <div className="col-span-1 p-6 rounded-2xl animate-fade-up animate-delay-300"
             style={{ background: "white", boxShadow: "0 4px 20px rgba(0,0,0,0.05)" }}
           >
             <div className="flex items-center gap-2 mb-4">
@@ -314,8 +307,8 @@ export function ProductDetailPage() {
 
         {/* Related Products */}
         {related.length > 0 && (
-          <div>
-            <div className="flex items-center justify-between mb-6">
+          <div ref={relatedRef}>
+            <div className="flex items-center justify-between mb-6 anim-fade-up">
               <h2 className="font-bold" style={{ color: "#1b4332", fontSize: "1.25rem" }}>
                 Related Products
               </h2>
@@ -328,8 +321,10 @@ export function ProductDetailPage() {
               </Link>
             </div>
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
-              {related.map((p) => (
-                <ProductCard key={p.id} product={p} />
+              {related.map((p, i) => (
+                <div key={p.id} className={`related-card-anim anim-fade-up anim-delay-${Math.min(i + 1, 3)}`}>
+                  <ProductCard product={p} />
+                </div>
               ))}
             </div>
           </div>

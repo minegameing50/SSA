@@ -1,0 +1,4 @@
+Contact: mailto:shivshatakshiagro@gmail.com
+Contact: https://shivshatakshiagro.com/#/contact
+Preferred-Languages: en, hi
+Canonical: https://shivshatakshiagro.com/.well-known/security.txt

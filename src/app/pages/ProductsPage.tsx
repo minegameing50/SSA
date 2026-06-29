@@ -1,9 +1,9 @@
-import { useState, useMemo } from "react";
+import { useState, useMemo, useEffect } from "react";
 import { useSearchParams } from "react-router";
-import { Search, SlidersHorizontal, X, Filter, ChevronDown } from "lucide-react";
+import { Search, X, Filter } from "lucide-react";
 import { ProductCard } from "../components/ProductCard";
 import { products, categories, cropTypes, pestTypes } from "../data/products";
-import type { ProductCategory } from "../data/products";
+import { useInView } from "../hooks/useInView";
 
 const categoryColors: Record<string, string> = {
   Insecticide: "#d97706",
@@ -24,6 +24,13 @@ export function ProductsPage() {
   const [selectedCropType, setSelectedCropType] = useState("");
   const [selectedPestType, setSelectedPestType] = useState("");
   const [mobileFiltersOpen, setMobileFiltersOpen] = useState(false);
+  const [filterKey, setFilterKey] = useState(0); // bumps to re-animate grid on filter change
+  const gridRef = useInView<HTMLDivElement>(".prod-grid-card", 0.04, [filterKey]);
+
+  // Sync category filter when URL search params change (e.g. clicking footer/nav links)
+  useEffect(() => {
+    setSelectedCategory(searchParams.get("category") ?? "");
+  }, [searchParams]);
 
   const filtered = useMemo(() => {
     return products.filter((p) => {
@@ -48,12 +55,18 @@ export function ProductsPage() {
     });
   }, [searchQuery, selectedCategory, selectedCropType, selectedPestType]);
 
+  // Bump filterKey to force grid re-mount and re-trigger useInView animations
+  useEffect(() => {
+    setFilterKey((k) => k + 1);
+  }, [selectedCategory, selectedCropType, selectedPestType, searchQuery]);
+
   const clearFilters = () => {
     setSearchQuery("");
     setSelectedCategory("");
     setSelectedCropType("");
     setSelectedPestType("");
     setSearchParams({});
+    setFilterKey((k) => k + 1);
   };
 
   const hasActiveFilters = searchQuery || selectedCategory || selectedCropType || selectedPestType;
@@ -174,7 +187,7 @@ export function ProductsPage() {
         className="pt-28 pb-12"
         style={{ background: "linear-gradient(135deg, #1b4332, #2d6a4f)" }}
       >
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 animate-fade-up">
           <span className="text-sm font-medium uppercase tracking-wider" style={{ color: "#86efac" }}>
             Our Product Range
           </span>
@@ -315,9 +328,18 @@ export function ProductsPage() {
             </div>
 
             {filtered.length > 0 ? (
-              <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-3 gap-6">
-                {filtered.map((product) => (
-                  <ProductCard key={product.id} product={product} />
+              <div
+                key={filterKey}
+                className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-3 gap-6"
+                ref={gridRef}
+              >
+                {filtered.map((product, i) => (
+                  <div
+                    key={product.id}
+                    className={`prod-grid-card anim-fade-up anim-delay-${Math.min((i % 6) + 1, 7)}`}
+                  >
+                    <ProductCard product={product} />
+                  </div>
                 ))}
               </div>
             ) : (
